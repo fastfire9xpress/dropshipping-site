@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastFire9 Xpress </title>
+    <title>FastFire9 Xpress</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,14 +21,28 @@
             padding: 15px 20px;
             text-align: center;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         header img {
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            width: 100px;
+            width: 80px;
             height: auto;
             border-radius: 50%;
+            margin-left: 20px;
+        }
+        .toggle-btn {
+            background: #0077b6;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #music-player {
+            position: relative;
+            right: 10px;
         }
         nav {
             background: rgba(255, 255, 255, 0.8);
@@ -38,119 +52,60 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 15px;
         }
         nav a {
             text-decoration: none;
-            color:#00000;
+            color: #000;
             font-weight: bold;
         }
         nav a:hover {
             text-decoration: underline;
         }
-        nav .unlock-container {
+        .search-container {
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        #music-player {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        .main-container {
-            display: flex;
-            margin: 20px;
-        }
-        .sidebar {
-            width: 20%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            height: fit-content;
-        }
-        .sidebar h2 {
-            font-size: 1.2em;
-            color: #005f73;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-        .dropdown {
-            display: none;
-            list-style: none;
-            padding: 0;
-        }
-        .dropdown li {
-            margin-bottom: 10px;
-        }
-        .dropdown li a {
-            text-decoration: none;
-            color: #0077b6;
-            font-weight: bold;
+        .search-container input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
         .products {
             flex-grow: 1;
-            margin-left: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
         }
         .product-card {
+            position: relative;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 15px;
             text-align: center;
         }
-        .product-card img {
-            max-width: 100%;
-            border-radius: 12px;
-        }
-        .product-card h3 {
-            font-size: 1em;
-            color: #005f73;
-            margin: 10px 0;
-        }
-        .product-card p {
-            margin: 5px 0;
-        }
-        .product-card a {
-            text-decoration: none;
-            color: #0077b6;
+        .ribbon {
+            position: absolute;
+            top: 10px;
+            left: -10px;
+            background: red;
+            color: white;
+            padding: 5px 15px;
+            font-size: 12px;
             font-weight: bold;
+            transform: rotate(-20deg);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
-        .hidden {
-            display: none;
-        }
-		.subtitle {
-            font-size: 0.9em;
-            font-style: italic;
-            color: #FFD700;
-            margin-top: 5px;
-        }
-		#searchBar {
-            width: 100%;
-            max-width: 300px;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin: 10px auto;
-            display: block;
-        }
-		.search-container {
-		margin-right:10px; /* Pushes it more to the left */
-		margin-left: 130px; /* Adjust this value to move it left */
-	}
-
     </style>
 </head>
 <body>
     <header>
+        <button class="toggle-btn" onclick="toggleSidebar()">☰ Categories</button>
         <img src="logo/ff.jpg" alt="Logo">
-        <h1>FastFire9 Xpress </h1>
-		<p class="subtitle">Making every order seamless, with speed and trust you can rely on</p>
+        <h1>FastFire9 Xpress</h1>
         <div id="music-player">
             <iframe width="200" height="100" 
                 src="https://www.youtube.com/embed/Qu9LsLCZg_0?autoplay=1&mute=0" 
@@ -158,98 +113,34 @@
                 allow="autoplay; encrypted-media" 
                 allowfullscreen>
             </iframe>
-            <button onclick="toggleMusic('https://www.youtube.com/embed/Qu9LsLCZg_0')">Music 1</button>
-            <button onclick="toggleMusic('https://www.youtube.com/embed/Mstx_8Y2Wps?si=8PWKUksajnmD0AUB')">Music 2</button>
         </div>
     </header>
 
-    <!-- Navigation Bar -->
     <nav>
-            <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search products...">
-        <button onclick="searchProducts()">Search</button>
-    </div>
-        <div class="unlock-container">
-            <input type="password" id="unlockPassword" placeholder="Owner Use Only" />
-            <button onclick="unlockLogin()">Unlock</button>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search products...">
+            <button onclick="searchProducts()">Search</button>
         </div>
         <a href="/">Home</a>
         <a href="/information">Information</a>
         <a href="/customer-service">Customer Service</a>
         <a href="/Become-A-Supplier">Become a Supplier</a>
         <a href="/payment-methods">Payment Methods</a>
-
-        <!-- Hidden admin links -->
-        <a href="/login" id="loginLink" class="hidden">Login</a>
-        <a href="/owner" id="ownerLink" class="hidden">Owner Page</a>
+        <input type="password" id="unlockPassword" placeholder="Owner Use Only" />
+        <button onclick="unlockLogin()">Unlock</button>
     </nav>
 
-    <div class="main-container">
-        <div class="sidebar">
-            <h2 onclick="toggleDropdown('cat1')">Category 1</h2>
-            <ul class="dropdown" id="cat1">
-                <li><a href="#">Subcategory 1.1</a></li>
-                <li><a href="#">Subcategory 1.2</a></li>
-            </ul>
-            <h2 onclick="toggleDropdown('cat2')">Category 2</h2>
-            <ul class="dropdown" id="cat2">
-                <li><a href="#">Subcategory 2.1</a></li>
-                <li><a href="#">Subcategory 2.2</a></li>
-            </ul>
-        </div>
-        <div class="products">
-            <div class="product-card">
-                <img src="images/product1.jpg" alt="Product 1">
-                <h3>Product 1</h3>
-                <p>Description of product 1</p>
-                <a href="#">Buy Now</a>
-            </div>
-            <div class="product-card">
-                <img src="images/product2.jpg" alt="Product 2">
-                <h3>Product 2</h3>
-                <p>Description of product 2</p>
-                <a href="#">Buy Now</a>
-            </div>
-        </div>
+    <div class="products">
+        <div class="product-card"><span class="ribbon">New</span><img src="images/product1.jpg" alt="Product 1"><h3>Product 1</h3><p>$10.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Hot</span><img src="images/product2.jpg" alt="Product 2"><h3>Product 2</h3><p>$12.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Limited</span><img src="images/product3.jpg" alt="Product 3"><h3>Product 3</h3><p>$15.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Sale</span><img src="images/product4.jpg" alt="Product 4"><h3>Product 4</h3><p>$20.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Best Seller</span><img src="images/product5.jpg" alt="Product 5"><h3>Product 5</h3><p>$25.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Exclusive</span><img src="images/product6.jpg" alt="Product 6"><h3>Product 6</h3><p>$30.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Limited</span><img src="images/product7.jpg" alt="Product 7"><h3>Product 7</h3><p>$35.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">New</span><img src="images/product8.jpg" alt="Product 8"><h3>Product 8</h3><p>$40.00</p><a href="#">Buy Now</a></div>
+        <div class="product-card"><span class="ribbon">Hot</span><img src="images/product9.jpg" alt="Product 9"><h3>Product 9</h3><p>$45.00</p><a href="#">Buy Now</a></div>
     </div>
-
-    <script>
-        function searchProducts() {
-            let input = document.getElementById("searchBar").value.toLowerCase();
-            let products = document.querySelectorAll(".product-card");
-
-            products.forEach(product => {
-                let title = product.querySelector("h3").textContent.toLowerCase();
-                product.style.display = title.includes(input) ? "block" : "none";
-        });
-		
-        }
-
-		function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function unlockLogin() {
-            const password = document.getElementById('unlockPassword').value;
-            const loginLink = document.getElementById('loginLink');
-            const ownerLink = document.getElementById('ownerLink');
-            const correctPassword = "7856plsm35"; // First password to unlock the Login button
-
-            if (password === correctPassword) {
-                loginLink.classList.remove('hidden');
-                ownerLink.classList.remove('hidden');
-                alert("Links Unlocked!");
-            } else {
-                alert("Incorrect Password. Try Again.");
-            }
-        }
-
-        function toggleMusic(src) {
-            const iframe = document.querySelector('#music-player iframe');
-            iframe.src = src;
-        }
-    </script>
 </body>
 </html>
 
